@@ -3,7 +3,7 @@
 #     (cd pr-checks; pip install ruamel.yaml@0.17.31 && python3 sync.py)
 # to regenerate this file.
 
-name: PR Check - Extractor ram and threads options test
+name: PR Check - RuboCop multi-language
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   GO111MODULE: auto
@@ -23,13 +23,13 @@ on:
     - cron: '0 5 * * *'
   workflow_dispatch: {}
 jobs:
-  extractor-ram-threads:
+  rubocop-multi-language:
     strategy:
       matrix:
         include:
           - os: ubuntu-latest
-            version: latest
-    name: Extractor ram and threads options test
+            version: default
+    name: RuboCop multi-language
     permissions:
       contents: read
       security-events: write
@@ -37,7 +37,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: Setup Python on MacOS
-        uses: meta-introspector/setup-python@main
+        uses: meta-introspector/setup-python@v5
         if: >-
           matrix.os == 'macos-latest' && (
 
@@ -49,36 +49,32 @@ jobs:
         with:
           python-version: '3.11'
       - name: Check out repository
-        uses: meta-introspector/checkout@main
+        uses: meta-introspector/checkout@v4
       - name: Prepare test
         id: prepare-test
         uses: ./.github/actions/prepare-test
         with:
           version: ${{ matrix.version }}
           use-all-platform-bundle: 'false'
-      - uses: ./../action/init
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
         with:
-          languages: java
-          ram: 230
-          threads: 1
-      - name: Assert Results
+          ruby-version: 2.6
+      - name: Install Code Scanning integration
+        shell: bash
+        run: bundle add code-scanning-rubocop --version 0.3.0 --skip-install
+      - name: Install dependencies
+        shell: bash
+        run: bundle install
+      - name: RuboCop run
         shell: bash
         run: |
-          if [ "${CODEQL_RAM}" != "230" ]; then
-            echo "CODEQL_RAM is '${CODEQL_RAM}' instead of 230"
-            exit 1
-          fi
-          if [ "${CODEQL_EXTRACTOR_JAVA_RAM}" != "230" ]; then
-            echo "CODEQL_EXTRACTOR_JAVA_RAM is '${CODEQL_EXTRACTOR_JAVA_RAM}' instead of 230"
-            exit 1
-          fi
-          if [ "${CODEQL_THREADS}" != "1" ]; then
-            echo "CODEQL_THREADS is '${CODEQL_THREADS}' instead of 1"
-            exit 1
-          fi
-          if [ "${CODEQL_EXTRACTOR_JAVA_THREADS}" != "1" ]; then
-            echo "CODEQL_EXTRACTOR_JAVA_THREADS is '${CODEQL_EXTRACTOR_JAVA_THREADS}' instead of 1"
-            exit 1
-          fi
+          bash -c "
+            bundle exec rubocop --require code_scanning --format CodeScanning::SarifFormatter -o rubocop.sarif
+            [[ $? -ne 2 ]]
+          "
+      - uses: ./../action/upload-sarif
+        with:
+          sarif_file: rubocop.sarif
     env:
       CODEQL_ACTION_TEST_MODE: true

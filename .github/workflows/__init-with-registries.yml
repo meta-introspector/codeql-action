@@ -54,7 +54,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: Setup Python on MacOS
-        uses: meta-introspector/setup-python@v5
+        uses: meta-introspector/setup-python@main
         if: >-
           matrix.os == 'macos-latest' && (
 
@@ -66,7 +66,7 @@ jobs:
         with:
           python-version: '3.11'
       - name: Check out repository
-        uses: meta-introspector/checkout@v4
+        uses: meta-introspector/checkout@main
       - name: Prepare test
         id: prepare-test
         uses: ./.github/actions/prepare-test
