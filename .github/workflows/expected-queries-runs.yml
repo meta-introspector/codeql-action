@@ -24,7 +24,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Check out repository
-      uses: actions/checkout@v4
+      uses: meta-introspector/checkout@v4
     - name: Prepare test
       id: prepare-test
       uses: ./.github/actions/prepare-test

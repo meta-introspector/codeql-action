@@ -18,11 +18,11 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - uses: actions/setup-python@v5
+    - uses: meta-introspector/setup-python@v5
       with:
         python-version: 3.12
 
-    - uses: actions/checkout@v4
+    - uses: meta-introspector/checkout@v4
 
     - name: Prepare test
       uses: ./.github/actions/prepare-test

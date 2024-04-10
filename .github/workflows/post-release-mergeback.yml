@@ -21,7 +21,7 @@ on:
 jobs:
   merge-back:
     runs-on: ubuntu-latest
-    if: github.repository == 'github/codeql-action'
+    if: github.repository == 'meta-introspector/codeql-action'
     env:
       BASE_BRANCH: "${{ github.event.inputs.baseBranch || 'main' }}"
       HEAD_BRANCH: "${{ github.head_ref || github.ref }}"
@@ -35,10 +35,10 @@ jobs:
           GITHUB_CONTEXT: '${{ toJson(github) }}'
         run: echo "${GITHUB_CONTEXT}"
 
-      - uses: actions/checkout@v4
+      - uses: meta-introspector/checkout@v4
         with:
           fetch-depth: 0  # ensure we have all tags and can push commits
-      - uses: actions/setup-node@v4
+      - uses: meta-introspector/setup-node@v4
 
       - name: Update git config
         run: |

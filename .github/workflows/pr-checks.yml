@@ -21,7 +21,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: meta-introspector/checkout@v4
 
       - name: Lint
         run: npm run-script lint
@@ -57,7 +57,7 @@ jobs:
     timeout-minutes: 45
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: meta-introspector/checkout@v4
       - name: Check node modules up to date
         run: .github/workflows/script/check-node-modules.sh
 
@@ -68,10 +68,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: meta-introspector/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: meta-introspector/setup-python@v5
         with:
           python-version: 3.11
 
@@ -95,7 +95,7 @@ jobs:
     timeout-minutes: 45
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: meta-introspector/checkout@v4
       - name: npm test
         run: |
           # Run any commands referenced in package.json using Bash, otherwise
@@ -112,7 +112,7 @@ jobs:
       BASE_REF: ${{ github.base_ref }}
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: meta-introspector/checkout@v4
       - id: head-version
         name: Verify all Actions use the same Node version
         run: |
@@ -127,7 +127,7 @@ jobs:
       - id: checkout-base
         name: 'Backport: Check out base ref'
         if: ${{ startsWith(github.head_ref, 'backport-') }}
-        uses: actions/checkout@v4
+        uses: meta-introspector/checkout@v4
         with:
           ref: ${{ env.BASE_REF }}
 

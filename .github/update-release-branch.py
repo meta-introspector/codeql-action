@@ -256,7 +256,7 @@ def main():
     '--repository-nwo',
     type=str,
     required=True,
-    help='The nwo of the repository, for example github/codeql-action.'
+    help='The nwo of the repository, for example meta-introspector/codeql-action.'
   )
   parser.add_argument(
     '--source-branch',

@@ -13,7 +13,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: meta-introspector/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.ref }}
 
@@ -22,7 +22,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
         run: |
-          gh pr edit --repo github/codeql-action "$PR_NUMBER" \
+          gh pr edit --repo meta-introspector/codeql-action "$PR_NUMBER" \
             --remove-label "Rebuild"
 
       - name: Merge in changes from base branch
@@ -49,7 +49,7 @@ jobs:
           npm run build
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: meta-introspector/setup-python@v5
         with:
           python-version: 3.11
 
@@ -73,6 +73,6 @@ jobs:
             git push origin "HEAD:$BRANCH"
             echo "Pushed a commit to rebuild the Action." \
               "Please mark the PR as ready for review to trigger PR checks." |
-              gh pr comment --body-file - --repo github/codeql-action "$PR_NUMBER"
-            gh pr ready --undo --repo github/codeql-action "$PR_NUMBER"
+              gh pr comment --body-file - --repo meta-introspector/codeql-action "$PR_NUMBER"
+            gh pr ready --undo --repo meta-introspector/codeql-action "$PR_NUMBER"
           fi

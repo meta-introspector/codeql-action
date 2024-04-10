@@ -39,13 +39,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
-        uses: actions/checkout@v4
+        uses: meta-introspector/checkout@v4
       - name: Prepare test
         id: prepare-test
         uses: ./.github/actions/prepare-test
         with:
           version: ${{ matrix.version }}
-      - uses: actions/setup-go@v5
+      - uses: meta-introspector/setup-go@v5
         with:
           go-version: ^1.13.1
       - uses: ./../action/init
@@ -70,7 +70,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download all artifacts
-        uses: actions/download-artifact@v3
+        uses: meta-introspector/download-artifact@v3
       - name: Check expected artifacts exist
         shell: bash
         run: |

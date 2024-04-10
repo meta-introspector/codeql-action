@@ -67,7 +67,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: Setup Python on MacOS
-        uses: actions/setup-python@v5
+        uses: meta-introspector/setup-python@v5
         if: >-
           matrix.os == 'macos-latest' && (
 
@@ -79,14 +79,14 @@ jobs:
         with:
           python-version: '3.11'
       - name: Check out repository
-        uses: actions/checkout@v4
+        uses: meta-introspector/checkout@v4
       - name: Prepare test
         id: prepare-test
         uses: ./.github/actions/prepare-test
         with:
           version: ${{ matrix.version }}
           use-all-platform-bundle: 'false'
-      - uses: actions/setup-go@v5
+      - uses: meta-introspector/setup-go@v5
         with:
           go-version: ~1.22.0
       # to avoid potentially misleading autobuilder results where we expect it to download
